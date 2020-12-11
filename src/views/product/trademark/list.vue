@@ -17,9 +17,21 @@
         </template>
       </el-table-column>
       <el-table-column label="操作">
-        <template>
-          <el-button type="warning" icon="el-icon-edit">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete">删除</el-button>
+        <template slot-scope="scope">
+          <el-button
+            type="warning"
+            icon="el-icon-edit"
+            size="mini"
+            @click="handleEdit(scope.row)"
+            >修改</el-button
+          >
+          <el-button
+            size="mini"
+            type="danger"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -159,11 +171,28 @@ export default {
           const result = await this.$API.trademark.addPageList(this.trademark);
           if (result.code === 200) {
             this.$message.success("添加品牌成功");
+            this.visible = false;
           } else {
             this.$message.error("添加品牌失败");
           }
         }
       });
+    },
+    //删除品牌数据
+    async handleDelete(trademark) {
+      if (window.confirm("您确定要删除该数据么")) {
+        const result = await this.$API.trademark.deletePageList(trademark.id);
+        if (result.code === 200) {
+          this.$message.success("成功删除该数据");
+          this.getPageList(this.page, this.limit);
+        } else {
+          this.$message.error("删除失败");
+        }
+      }
+    },
+    //修改品牌数据
+    async handleEdit(trademark) {
+      const result = await this.$API.trademark.updatePageList(trademark);
     },
   },
   mounted() {
@@ -174,6 +203,7 @@ export default {
 <style lang='sass'>
 .tradeMark-logoImg
   width: 100px
+  height: 80px
 .el-pagination
   text-align: right
 .el-pagination__sizes
