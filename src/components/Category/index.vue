@@ -7,6 +7,7 @@
             v-model="category.category1Id"
             placeholder="请选择"
             @change="handleSelectChange1"
+            :disabled="disabled"
           >
             <el-option
               v-for="c1 in category1List"
@@ -22,6 +23,7 @@
             v-model="category.category2Id"
             placeholder="请选择"
             @change="handleSelectChange2"
+            :disabled="disabled"
           >
             <el-option
               v-for="c2 in category2List"
@@ -37,6 +39,7 @@
             v-model="category.category3Id"
             placeholder="请选择"
             @change="handleSelectChange3"
+            :disabled="disabled"
           >
             <el-option
               v-for="c3 in category3List"
@@ -67,6 +70,7 @@ export default {
       category3List: [],
     };
   },
+  props: ["disabled"],
   methods: {
     //获得分类列表2
     async handleSelectChange1(category1Id) {

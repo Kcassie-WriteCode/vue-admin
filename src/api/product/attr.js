@@ -37,7 +37,7 @@ export default {
     });
   },
   //保存属性信息
-  SaveAttrInfo(attr) {
+  saveAttrInfo(attr) {
     return request({
       url: `${api_name}/saveAttrInfo`,
       method: "POST",
