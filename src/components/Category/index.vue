@@ -82,7 +82,7 @@ export default {
       if (result.code === 200) {
         this.category2List = result.data;
       }
-      this.$emit("clearList");
+      this.$bus.$emit("clearList");
     },
     //获得分类列表3
     async handleSelectChange2(category2Id) {
@@ -93,15 +93,15 @@ export default {
         this.category3List = result.data;
       }
       //清空父组件数据
-      this.$emit("clearList");
+      this.$bus.$emit("clearList");
     },
-    //给父组件传递category
     handleSelectChange3(category3Id) {
       const category = {
         ...this.category,
         category3Id,
       };
-      this.$emit("change", category);
+      //给父组件传递category  //给兄弟spushowlist传递category
+      this.$bus.$emit("change", category);
     },
   },
   //获得分类列表1

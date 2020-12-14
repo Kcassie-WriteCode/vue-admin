@@ -1,11 +1,8 @@
 <template>
   <div>
     <!-- 如果为修改添加界面，分类列表为disabled -->
-    <Category
-      @change="getAttrList"
-      :disabled="!isShowList"
-      @clearList="clearList"
-    />
+    <!-- 自定义事件 @change=" getAttrList"  @clearList=" clearList"-->
+    <Category :disabled="!isShowList" />
     <el-card style="margin-top: 20px" v-show="isShowList">
       <el-button
         type="primary"
@@ -211,6 +208,16 @@ export default {
         this.attrList = result.data;
       }
     },
+  },
+  mounted() {
+    //全局事件总线
+    this.$bus.$on("change", this.getAttrList);
+    this.$bus.$on("clearList", this.clearList);
+  },
+  beforeDestroy() {
+    //清理事件收尾
+    this.$bus.$off("change", this.getAttrList);
+    this.$bus.$off("clearList", this.clearList);
   },
   components: {
     Category,

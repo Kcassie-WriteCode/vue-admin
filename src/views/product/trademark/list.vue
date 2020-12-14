@@ -272,10 +272,6 @@ export default {
 .tradeMark-logoImg
   width: 100px
   height: 80px
-.el-pagination
-  text-align: right
-.el-pagination__sizes
-  margin-left: 250px
 .el-form-item__label
   width: 100px
 .avatar-uploader .el-upload
