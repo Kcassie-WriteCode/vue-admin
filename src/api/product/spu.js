@@ -11,13 +11,6 @@ export default {
       }
     });
   },
-  //获取销售属性列表
-  getSaleAttrList() {
-    return request({
-      url: `${api_name}/baseSaleAttrList`,
-      method: "GET"
-    });
-  },
   //删除spu
   deleteSpu(spuId) {
     return request({
@@ -33,12 +26,40 @@ export default {
       data: spu
     });
   },
-   //更新spu信息
-   updateSpuInfo(spu) {
+  //更新spu信息
+  updateSpuInfo(spu) {
     return request({
       url: `${api_name}/updateSpuInfo`,
       method: "POST",
       data: spu
+    });
+  },
+  //获取品牌属性列表
+  getTrademarkList() {
+    return request({
+      url: `${api_name}/baseTrademark/getTrademarkList`,
+      method: "GET"
+    });
+  },
+  //获取销售属性列表
+  getsSpuSaleAttrList(spuId) {
+    return request({
+      url: `${api_name}/spuSaleAttrList/${spuId}`,
+      method: "GET"
+    });
+  },
+  //获取所有销售属性列表
+  getSaleAttrList() {
+    return request({
+      url: `${api_name}/baseSaleAttrList`,
+      method: "GET"
+    });
+  },
+  //获取spu图片列表
+  getSpuImageList(spuId) {
+    return request({
+      url: `${api_name}/spuImageList/${spuId}`,
+      method: "GET"
     });
   }
 };

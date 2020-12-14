@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       isShowList: true,
-      item: [], //收集当前行的信息//传给spuUpdatelist
+      item: {}, //收集当前行的信息//传给spuUpdatelist
     };
   },
   methods: {
