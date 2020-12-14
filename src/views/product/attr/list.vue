@@ -1,9 +1,19 @@
 <template>
   <div>
     <!-- 如果为修改添加界面，分类列表为disabled -->
-    <Category @change="getAttrList" :disabled="!isShowList" />
+    <Category
+      @change="getAttrList"
+      :disabled="!isShowList"
+      @clearList="clearList"
+    />
     <el-card style="margin-top: 20px" v-show="isShowList">
-      <el-button type="primary" icon="el-icon-plus">添加</el-button>
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        @click="addAttr"
+        :disabled="!category.category3Id"
+        >添加</el-button
+      >
       <el-table :data="attrList" border style="width: 100%; margin: 20px 0">
         <el-table-column type="index" label="序号" width="80" align="center">
         </el-table-column>
@@ -44,10 +54,13 @@
           <el-input v-model="attr.attrName"></el-input>
         </el-form-item>
       </el-form>
-      <el-button type="primary" icon="el-icon-plus" @click="addAttrValue"
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        @click="addAttrValue"
+        :disabled="!attr.attrName"
         >添加属性值</el-button
       >
-      <el-button>取消</el-button>
       <!-- 遍历属性值列表 -->
       <el-table
         :data="attr.attrValueList"
@@ -68,7 +81,7 @@
               @blur="editCompleted(row, $index)"
               @keyup.enter.native="editCompleted(row, $index)"
             ></el-input>
-
+            <!--edit方法设置edit属性,为响应式 -->
             <span v-else @click="edit(row)" style="display: block; width: 100%">
               {{ row.valueName }}
             </span>
@@ -109,16 +122,44 @@ export default {
         attrName: "",
         attrValueList: [],
       },
+      category: {
+        category1Id: "", //category要为响应式，在data中设置category
+        category2Id: "",
+        category3Id: "",
+      },
     };
   },
   methods: {
+    //重新选择category的时候，清空attrlist
+    clearList() {
+      //禁用按钮
+      this.category.category3Id = "";
+      this.attrList = [];
+    },
+    addAttr() {
+      //切为添加界面
+      this.isShowList = false;
+      //添加的时候,清空所有的数据
+      this.attr.attrName = "";
+      this.attr.attrValueList = [];
+      this.attr.categoryId = "";
+    },
     //发送请求保存
     async save() {
-      const result = await this.$API.attr.saveAttrInfo(this.attr);
+      const isAdd = !this.attr.id;
+      const data = this.attr;
+      //一上来没有id的是添加，有id的是修改
+      if (isAdd) {
+        //给attr添加id
+        data.categoryId = this.category.category3Id;
+        data.categoryLevel = 3;
+      }
+      const result = await this.$API.attr.saveAttrInfo(data);
+
       if (result.code === 200) {
         //切换回显示属性列表界面
         this.isShowList = true;
-        //获取属性列表，进行显示
+        //调用getattrlist方法获取属性列表，进行显示
         this.getAttrList(this.category);
       }
     },
@@ -163,6 +204,7 @@ export default {
     },
     //获取商品属性信息
     async getAttrList(category) {
+      //保存起category,以便修改完成保存信息的时候要用
       this.category = category;
       const result = await this.$API.attr.getAttrInfoList(category);
       if (result.code === 200) {

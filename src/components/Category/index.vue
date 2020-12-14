@@ -1,11 +1,11 @@
 <template>
   <div>
     <el-card>
-      <el-form :model="category" :inline="true">
+      <el-form inline>
         <el-form-item label="一级分类">
+          <!-- v-model的值为el-option的值 -->
           <el-select
             v-model="category.category1Id"
-            placeholder="请选择"
             @change="handleSelectChange1"
             :disabled="disabled"
           >
@@ -21,7 +21,6 @@
         <el-form-item label="二级分类">
           <el-select
             v-model="category.category2Id"
-            placeholder="请选择"
             @change="handleSelectChange2"
             :disabled="disabled"
           >
@@ -37,7 +36,6 @@
         <el-form-item label="三级分类">
           <el-select
             v-model="category.category3Id"
-            placeholder="请选择"
             @change="handleSelectChange3"
             :disabled="disabled"
           >
@@ -61,9 +59,9 @@ export default {
   data() {
     return {
       category: {
-        category1Id: {},
-        category2Id: {},
-        category3Id: {},
+        category1Id: "",
+        category2Id: "",
+        category3Id: "",
       },
       category1List: [],
       category2List: [],
@@ -76,23 +74,26 @@ export default {
     async handleSelectChange1(category1Id) {
       //处理change事件的input框的问题
       //重新选择，其他的都要清除
-      this.category2Id = "";
-      this.category3Id = "";
+      this.category.category2Id = "";
+      this.category.category3Id = "";
       this.category2List = [];
       this.category3List = [];
       const result = await this.$API.attr.getCategory2(category1Id);
       if (result.code === 200) {
         this.category2List = result.data;
       }
+      this.$emit("clearList");
     },
     //获得分类列表3
     async handleSelectChange2(category2Id) {
-      this.category3Id = "";
+      this.category.category3Id = "";
       this.category3List = [];
       const result = await this.$API.attr.getCategory3(category2Id);
       if (result.code === 200) {
         this.category3List = result.data;
       }
+      //清空父组件数据
+      this.$emit("clearList");
     },
     //给父组件传递category
     handleSelectChange3(category3Id) {
