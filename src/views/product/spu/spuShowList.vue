@@ -1,11 +1,10 @@
 <template>
   <el-card style="margin-top: 20px" v-loading="loading">
-    <!-- :disabled="!category.category3Id" -->
     <el-button
       type="primary"
       icon="el-icon-plus"
-      :disabled="category.category3Id > 0 ? false : true"
       @click="$bus.$emit('showUpdateList')"
+      :disabled="category.category3Id > 0 ? false : true"
       >添加SPU</el-button
     >
     <el-table :data="spuList" border style="width: 100%; margin: 20px 0">
@@ -87,8 +86,9 @@ export default {
     },
     //这里因为要卸载所以必须封装函数
     //因为分页器的函数已经封装好了，只能传两个参
-    handleSpuPageList(category) {
-      this.category = category; //点击三级分类获取category
+    handleSpuPageList(category3Id) {
+      //点击三级分类获取category3Id
+      this.category.category3Id = category3Id;
       this.getPageList(this.page, this.limit);
     },
     //再次点击分类的时候要清空spushowlist页面

@@ -56,7 +56,7 @@
       width="50%"
     >
       <el-form
-        ref="trademark"
+        ref="trademarkForm"
         :model="trademark"
         label-width="100px"
         :rules="rules"
@@ -114,7 +114,7 @@ export default {
       rules: {
         tmName: [
           {
-            // required: true,
+            required: true,
             //  message: "请输入品牌名称",
             // 自定义表单校验规则
             validator: this.validator,
@@ -126,7 +126,7 @@ export default {
     };
   },
   methods: {
-    //自校验规则没有*
+    //自校验规则没有*,要自己加required为true
     validator(rule, value, callback) {
       if (!value) {
         callback(new Error("请输入品牌名称"));
@@ -139,7 +139,7 @@ export default {
     },
     add() {
       //下次进来添加的时候，先清空表单验证
-      this.$refs.trademark && this.$refs.trademark.clearValidate();
+      this.$refs.trademarkForm && this.$refs.trademarkForm.clearValidate();
       //显示对话框
       this.visible = true;
       //清空数据为空对象
@@ -152,7 +152,7 @@ export default {
     //修改品牌数据
     async handleEdit(row) {
       //下次进来修改的时候，先清空表单验证
-      this.$refs.trademark && this.$refs.trademark.clearValidate();
+      this.$refs.trademarkForm && this.$refs.trademarkForm.clearValidate();
       this.visible = true;
       //赋值,在对话框中显示内容，但是要注意不要是引用类型
       this.trademark = { ...row };
@@ -214,8 +214,8 @@ export default {
     },
     //提交表单，添加,修改品牌
     //注意数据比较的对象和发送请求的数据对象this.trademark，
-    onSubmit(row) {
-      this.$refs[row].validate(async (valid) => {
+    onSubmit(trademarkForm) {
+      this.$refs.trademarkForm.validate(async (valid) => {
         if (valid) {
           const { trademark } = this;
           //转换为布尔值，如果有id就发送修改请求，没有就发送添加请求

@@ -35,9 +35,18 @@
               @click="update(row)"
               >修改</el-button
             >
-            <el-button size="mini" type="danger" icon="el-icon-delete"
-              >删除</el-button
+            <el-popconfirm
+              :title="`确定删除${row.attrName}吗`"
+              @onConfirm="delAttr(row.id)"
             >
+              <el-button
+                slot="reference"
+                size="mini"
+                type="danger"
+                icon="el-icon-delete"
+                >删除</el-button
+              >
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -127,6 +136,14 @@ export default {
     };
   },
   methods: {
+    //删除单个属性
+    async delAttr(id) {
+      const result = await this.$API.attr.deleteAttr(id);
+      if (result.code === 200) {
+        this.$message.success("删除属性成功");
+        this.getAttrList(this.category);
+      }
+    },
     //重新选择category的时候，清空attrlist
     clearList() {
       //禁用按钮
@@ -211,12 +228,12 @@ export default {
   },
   mounted() {
     //全局事件总线
-    this.$bus.$on("change", this.getAttrList);
+    this.$bus.$on("changes", this.getAttrList);
     this.$bus.$on("clearList", this.clearList);
   },
   beforeDestroy() {
     //清理事件收尾
-    this.$bus.$off("change", this.getAttrList);
+    this.$bus.$off("changes", this.getAttrList);
     this.$bus.$off("clearList", this.clearList);
   },
   components: {

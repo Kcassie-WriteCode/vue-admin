@@ -43,5 +43,12 @@ export default {
       method: "POST",
       data: attr
     });
+  },
+  // 删除单个属性数据/admin/product/deleteAttr/{attrId}
+  deleteAttr(attrId) {
+    return request({
+      url: `${api_name}/deleteAttr/${attrId}`,
+      method: "DELETE"
+    });
   }
 };
