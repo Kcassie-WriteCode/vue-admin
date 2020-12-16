@@ -228,12 +228,12 @@ export default {
   },
   mounted() {
     //全局事件总线
-    this.$bus.$on("changes", this.getAttrList);
+    this.$bus.$on("change", this.getAttrList);
     this.$bus.$on("clearList", this.clearList);
   },
   beforeDestroy() {
     //清理事件收尾
-    this.$bus.$off("changes", this.getAttrList);
+    this.$bus.$off("change", this.getAttrList);
     this.$bus.$off("clearList", this.clearList);
   },
   components: {

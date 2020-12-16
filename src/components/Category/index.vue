@@ -101,9 +101,8 @@ export default {
         category3Id,
       };
       //给attr父组件传递category
-      this.$bus.$emit("changes", category);
       //给兄弟spushowlist传递category
-      this.$bus.$emit("change", category3Id);
+      this.$bus.$emit("change", category);
     },
   },
   //获得分类列表1

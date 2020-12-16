@@ -226,23 +226,12 @@ export default {
             this.$message.success(
               `${this.spu.id ? "更新" : "添加"}spu数据成功`
             );
+            //切换回到showlist组件并跟新页面数据，
+            //触发在list父组件中的自定义事件
             this.$emit("showList", this.spu.category3Id);
           }
         }
       });
-      // const spu = {
-      //   ...this.spu,
-      //   spuImageList: this.imageList,
-      //   spuSaleAttrList: this.spuSaleAttrList,
-      // };
-      // //发送请求跟新数据
-      // const result = await this.$API.spu.updateSpuInfo(spu);
-      // if (result.code === 200) {
-      //   this.$message.success("更新spu数据成功");
-      //   //切换回到showlist组件并跟新页面数据，
-      //   //触发在list父组件中的自定义事件
-      //   this.$emit("showList", this.spu.category3Id);
-      // }
     },
     //删除单个spu属性
     delSpuAtrr(index) {

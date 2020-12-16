@@ -84,7 +84,7 @@ export default {
       if (result.code === 200) {
         this.$message.success("删除spu成功");
         //更新页面
-        this.handleSpuPageList(this.category.category3Id);
+        this.handleSpuPageList(this.category);
       } else {
         this.$message.error(error.message);
       }
@@ -111,9 +111,10 @@ export default {
     },
     //这里因为要卸载所以必须封装函数
     //因为分页器的函数已经封装好了，只能传两个参
-    handleSpuPageList(category3Id) {
+    handleSpuPageList(category) {
       //点击三级分类获取category3Id
-      this.category.category3Id = category3Id;
+      //this.category.category3Id = category3Id;
+      this.category = category;
       this.getPageList(this.page, this.limit);
     },
     //再次点击分类的时候要清空spushowlist页面

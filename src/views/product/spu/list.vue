@@ -40,8 +40,11 @@ export default {
       //点击保存或者取消 切换组件
       this.isShowList = true;
       //要等到showlist组件dom元素渲染完，绑定了change事件才可以触发，更新页面数据
+      //这里只发category3id，得用对象结构，不然传的是一个number
+      //绑定事件的那一方必须接收的是一个对象，
+      //不然，赋值会出现给数字创建一个category3id属性的错误
       this.$nextTick(() => {
-        this.$bus.$emit("change", category3Id);
+        this.$bus.$emit("change", { category3Id });
       });
     },
     showSkuList(row) {
