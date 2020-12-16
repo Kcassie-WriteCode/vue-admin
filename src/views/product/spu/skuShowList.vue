@@ -34,7 +34,7 @@
           v-for="attr in attrList"
           :key="attr.id"
         >
-          <span> {{ attr.attrName }}</span>
+          <span class="spulist-span-container"> {{ attr.attrName }}</span>
           <el-select placeholder="请输入" v-model="spu.attrId">
             <el-option
               :label="attrValue.valueName"
@@ -51,7 +51,7 @@
           v-for="sale in spuSaleAttrList"
           :key="sale.id"
         >
-          <span>{{ sale.saleAttrName }}</span>
+          <span class="spulist-span-container">{{ sale.saleAttrName }}</span>
           <el-select placeholder="请输入" v-model="spu.description">
             <el-option
               :label="spuSaleAttrValue.saleAttrValueName"
@@ -168,6 +168,11 @@ export default {
   text-align: left
 .skulist-select-container
   display: inline-block
-  margin-right: 20px
+  margin: 0 30px 20px 0
+.skulist-select-container .spulist-span-container
+  display: inline-block
+  width: 60px
+  text-align: right
+  color: black
 </style>
 
