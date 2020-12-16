@@ -1,10 +1,13 @@
 <template>
   <el-card style="margin-top: 20px" v-loading="loading">
+    <!-- 添加数据完，返回showlist界面也需要category3id，得传进去 -->
     <el-button
       type="primary"
       icon="el-icon-plus"
-      @click="$bus.$emit('showUpdateList')"
-      :disabled="category.category3Id > 0 ? false : true"
+      @click="
+        $bus.$emit('showUpdateList', { category3Id: category.category3Id })
+      "
+      :disabled="!category.category3Id"
       >添加SPU</el-button
     >
     <el-table :data="spuList" border style="width: 100%; margin: 20px 0">
@@ -15,7 +18,12 @@
       <el-table-column prop="description" label="SPU描述"> </el-table-column>
       <el-table-column label="操作">
         <template v-slot="{ row }">
-          <el-button type="primary" icon="el-icon-plus" size="mini"></el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            size="mini"
+            @click="$emit('showSkuList', { ...row, ...category })"
+          ></el-button>
           <el-button
             type="primary"
             icon="el-icon-edit"
@@ -23,11 +31,17 @@
             @click="$bus.$emit('showUpdateList', row)"
           ></el-button>
           <el-button type="info" icon="el-icon-info" size="mini"></el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            icon="el-icon-delete"
-          ></el-button>
+          <el-popconfirm
+            :title="`确定删除${row.spuName}吗`"
+            @onConfirm="delSpuAtrr(row.id)"
+          >
+            <el-button
+              slot="reference"
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+            ></el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -64,6 +78,17 @@ export default {
     };
   },
   methods: {
+    //删除整行 spuattr
+    async delSpuAtrr(skuId) {
+      const result = await this.$API.spu.deleteSpu(skuId);
+      if (result.code === 200) {
+        this.$message.success("删除spu成功");
+        //更新页面
+        this.handleSpuPageList(this.category.category3Id);
+      } else {
+        this.$message.error(error.message);
+      }
+    },
     //获取spulist数据
     async getPageList(page, limit) {
       //发送数据请求之前先加载

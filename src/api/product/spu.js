@@ -61,5 +61,13 @@ export default {
       url: `${api_name}/spuImageList/${spuId}`,
       method: "GET"
     });
+  },
+  //更新sku /admin/product/updateSkuInfo
+  updateSkuInfo(sku) {
+    return request({
+      url: `${api_name}/updateSkuInfo`,
+      method: "POST",
+      data: sku
+    });
   }
 };

@@ -190,9 +190,9 @@ export default {
       }
       callback();
     },
-    //在点保存得更新函数
-    //校验prop
+    //在点保存的更新或添加函数
     save() {
+      //校验prop
       this.$refs.spuForm.validate(async (valid) => {
         if (valid) {
           this.$message.success("表单校验通过");
@@ -211,10 +211,21 @@ export default {
             spuImageList: this.imageList,
             spuSaleAttrList: this.spuSaleAttrList,
           };
-          //发送请求跟新数据
-          const result = await this.$API.spu.updateSpuInfo(spu);
+          let result;
+          if (this.spu.id) {
+            //更新数据必须有id，得找到要更新的是哪一个数据
+            //发送请求跟新数据
+            result = await this.$API.spu.updateSpuInfo(spu);
+          } else {
+            //添加数据不用id
+            //注意添加时spu虽然为空，但是必须得传category3id
+            //此时的spu只有category3id
+            result = await this.$API.spu.saveSpuInfo(spu);
+          }
           if (result.code === 200) {
-            this.$message.success("更新spu数据成功");
+            this.$message.success(
+              `${this.spu.id ? "更新" : "添加"}spu数据成功`
+            );
             this.$emit("showList", this.spu.category3Id);
           }
         }
@@ -381,9 +392,12 @@ export default {
   },
   mounted() {
     this.getTrademarkList();
-    this.getSpuImageList();
     this.getSaleAttrList();
-    this.getsSpuSaleAttrList();
+    //修改数据才需要imagelist和spusaleattrlist
+    if (this.spu.id) {
+      this.getSpuImageList();
+      this.getsSpuSaleAttrList();
+    }
   },
 };
 </script>
