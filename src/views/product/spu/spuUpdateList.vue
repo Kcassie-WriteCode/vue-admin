@@ -5,8 +5,8 @@
         <el-input placeholder="SPU名称" v-model="spu.spuName"></el-input>
       </el-form-item>
 
-      <el-form-item label="品牌" prop="spuTm">
-        <el-select v-model="spu.spuTm" placeholder="请选择品牌">
+      <el-form-item label="品牌" prop="tmId">
+        <el-select v-model="spu.tmId" placeholder="请选择品牌">
           <el-option
             :label="tm.tmName"
             :value="tm.id"
@@ -15,8 +15,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="品牌描述" prop="spuDescription">
-        <el-input type="textarea" v-model="spu.spuDescription"></el-input>
+      <el-form-item label="品牌描述" prop="description">
+        <el-input type="textarea" v-model="spu.description"></el-input>
       </el-form-item>
       <el-form-item label="SPU图片" prop="imageList">
         <!-- accept接收的文件类型 list-type图片列表类型为卡片 -->
@@ -105,7 +105,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="save">保存</el-button>
-        <el-button @click="$emit('showList', spu.category3Id)">取消</el-button>
+        <el-button @click="$emit('showList')">取消</el-button>
       </el-form-item>
     </el-form>
     <el-dialog :visible.sync="visible">
@@ -115,6 +115,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "SpuUpdateList",
   props: ["item"],
@@ -131,14 +132,17 @@ export default {
       //prop校验
       rules: {
         spuName: [{ required: true, message: "SPU名称不能为空" }],
-        spuTm: [{ required: true, message: "选择品牌不能为空" }],
-        spuDescription: [{ required: true, message: "品牌描述不能为空" }],
+        tmId: [{ required: true, message: "选择品牌不能为空" }],
+        description: [{ required: true, message: "品牌描述不能为空" }],
         imageList: [{ required: true, validator: this.imageListValidator }],
         sale: [{ required: true, validator: this.saleValidator }],
       },
     };
   },
   computed: {
+    ...mapState({
+      category: (state) => state.category.category,
+    }),
     // 在所有的销售属性列表里面过滤掉
     //已经选择在table里面的数据  单个spu销售属性 //留下未选择的
     filterSaleAttrList() {
@@ -206,8 +210,10 @@ export default {
           "spuSaleAttrList":[],查看vue没有
           "tmId": 0 // updateSpuInfo
          */
+          //通知showlist发请求
           const spu = {
             ...this.spu,
+            category3Id: this.category.category3Id,
             spuImageList: this.imageList,
             spuSaleAttrList: this.spuSaleAttrList,
           };
@@ -228,7 +234,8 @@ export default {
             );
             //切换回到showlist组件并跟新页面数据，
             //触发在list父组件中的自定义事件
-            this.$emit("showList", this.spu.category3Id);
+            //把数据保存在spu里了。通知showlist发请求
+            this.$emit("showList");
           }
         }
       });

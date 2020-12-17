@@ -102,12 +102,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "SkuShowList",
   props: ["spuItem"],
   data() {
     return {
-      a: 1,
       spu: this.spuItem, //标准化产品单元
       sku: {}, //sku库存保有单位
       rules: {}, //校验规则
@@ -115,6 +115,11 @@ export default {
       spuSaleAttrList: [], //销售属性
       attrList: [], //平台属性
     };
+  },
+  computed: {
+    ...mapState({
+      category: (state) => state.category.category,
+    }),
   },
   methods: {
     handleChange() {},
@@ -145,11 +150,7 @@ export default {
     //获取商品属性信息
     async getAttrList() {
       //保存起category,以便修改完成保存信息的时候要用
-      const result = await this.$API.attr.getAttrInfoList({
-        category1Id: this.spu.category1Id,
-        category2Id: this.spu.category2Id,
-        category3Id: this.spu.category3Id,
-      });
+      const result = await this.$API.attr.getAttrInfoList(this.category);
       if (result.code === 200) {
         this.attrList = result.data;
       }

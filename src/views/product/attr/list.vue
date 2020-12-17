@@ -118,6 +118,7 @@
 
 <script>
 import Category from "../../../components/Category";
+import { mapState } from "vuex";
 export default {
   name: "AttrList",
   data() {
@@ -128,12 +129,31 @@ export default {
         attrName: "",
         attrValueList: [],
       },
-      category: {
-        category1Id: "", //category要为响应式，在data中设置category
-        category2Id: "",
-        category3Id: "",
-      },
     };
+  },
+  computed: {
+    ...mapState({
+      category: (state) => state.category.category,
+    }),
+  },
+  //监视数据变化，调用相应的函数进行逻辑处理
+  watch: {
+    "category.category3Id"(category3Id) {
+      //处理再次点击分类的时候发送请求的清空，
+      //不然点击一二等级时，category3id是从有到没有，也会发请求
+      //如果没有category3id就不发请求
+      if (!category3Id) return;
+      //category3id从没有到有就发请求
+      this.getAttrList();
+    },
+    //重新选择一级分类时清空数据
+    "category.category1Id"() {
+      this.clearList();
+    },
+    //重新选择一级分类时清空数据
+    "category.category2Id"() {
+      this.clearList();
+    },
   },
   methods: {
     //删除单个属性
@@ -141,7 +161,7 @@ export default {
       const result = await this.$API.attr.deleteAttr(id);
       if (result.code === 200) {
         this.$message.success("删除属性成功");
-        this.getAttrList(this.category);
+        this.getAttrList();
       }
     },
     //重新选择category的时候，清空attrlist
@@ -157,6 +177,7 @@ export default {
       this.attr.attrName = "";
       this.attr.attrValueList = [];
       this.attr.categoryId = "";
+      this.attr.id = "";
     },
     //发送请求保存
     async save() {
@@ -174,7 +195,7 @@ export default {
         //切换回显示属性列表界面
         this.isShowList = true;
         //调用getattrlist方法获取属性列表，进行显示
-        this.getAttrList(this.category);
+        this.getAttrList();
       }
     },
     //删除属性值
@@ -217,24 +238,13 @@ export default {
       this.attr = JSON.parse(JSON.stringify(row));
     },
     //获取商品属性信息
-    async getAttrList(category) {
+    async getAttrList() {
       //保存起category,以便修改完成保存信息的时候要用
-      this.category = category;
-      const result = await this.$API.attr.getAttrInfoList(category);
+      const result = await this.$API.attr.getAttrInfoList(this.category);
       if (result.code === 200) {
         this.attrList = result.data;
       }
     },
-  },
-  mounted() {
-    //全局事件总线
-    this.$bus.$on("change", this.getAttrList);
-    this.$bus.$on("clearList", this.clearList);
-  },
-  beforeDestroy() {
-    //清理事件收尾
-    this.$bus.$off("change", this.getAttrList);
-    this.$bus.$off("clearList", this.clearList);
   },
   components: {
     Category,

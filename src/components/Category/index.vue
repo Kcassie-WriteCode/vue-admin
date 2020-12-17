@@ -54,63 +54,55 @@
 </template>
 
 <script>
+import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   name: "Category",
+  props: ["disabled"],
   data() {
     return {
       category: {
-        category1Id: "",
-        category2Id: "",
-        category3Id: "",
+        category1List: "",
+        category2List: "",
+        category3List: "",
       },
-      category1List: [],
-      category2List: [],
-      category3List: [],
     };
   },
-  props: ["disabled"],
+  computed: {
+    ...mapState({
+      category1List: (state) => state.category.category1List,
+      category2List: (state) => state.category.category2List,
+      category3List: (state) => state.category.category3List,
+    }),
+  },
   methods: {
+    ...mapActions([
+      "category/getCategory1List",
+      "category/getCategory2List",
+      "category/getCategory3List",
+    ]),
+    ...mapMutations(["category/SET_CATEGORY3_ID"]),
     //获得分类列表2
-    async handleSelectChange1(category1Id) {
+    handleSelectChange1(category1Id) {
       //处理change事件的input框的问题
       //重新选择，其他的都要清除
-      this.category.category2Id = "";
-      this.category.category3Id = "";
-      this.category2List = [];
-      this.category3List = [];
-      const result = await this.$API.attr.getCategory2(category1Id);
-      if (result.code === 200) {
-        this.category2List = result.data;
-      }
-      this.$bus.$emit("clearList");
+      this["category/getCategory2List"](category1Id);
+      //this.$bus.$emit("clearList");
     },
     //获得分类列表3
-    async handleSelectChange2(category2Id) {
-      this.category.category3Id = "";
-      this.category3List = [];
-      const result = await this.$API.attr.getCategory3(category2Id);
-      if (result.code === 200) {
-        this.category3List = result.data;
-      }
+    handleSelectChange2(category2Id) {
+      this["category/getCategory3List"](category2Id);
       //清空父组件数据
-      this.$bus.$emit("clearList");
+      //this.$bus.$emit("clearList");
     },
     handleSelectChange3(category3Id) {
-      const category = {
-        ...this.category,
-        category3Id,
-      };
+      this["category/SET_CATEGORY3_ID"](category3Id);
       //给attr父组件传递category
       //给兄弟spushowlist传递category
-      this.$bus.$emit("change", category);
     },
   },
   //获得分类列表1
-  async mounted() {
-    const result = await this.$API.attr.getCategory1();
-    if (result.code === 200) {
-      this.category1List = result.data;
-    }
+  mounted() {
+    this["category/getCategory1List"]();
   },
 };
 </script>
