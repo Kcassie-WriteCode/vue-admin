@@ -59,11 +59,12 @@ export default {
   name: "Category",
   props: ["disabled"],
   data() {
+    const { category } = this.$store.state.category;
     return {
       category: {
-        category1List: "",
-        category2List: "",
-        category3List: "",
+        category1List: category.category1Id,
+        category2List: category.category2Id,
+        category3List: category.category3Id,
       },
     };
   },

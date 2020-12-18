@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SkuShowList v-if="isShowSkuList" :spuItem="spuItem" />
+    <SkuShowList v-if="isShowSkuList" :spuItem="spuItem" @showList="showList" />
     <div v-else>
       <Category />
       <!--
@@ -48,6 +48,7 @@ export default {
       //绑定事件的那一方必须接收的是一个对象，
       //不然，赋值会出现给数字创建一个category3id属性的错误
       // 通知ShowList重新发送请求
+      this.isShowSkuList = false;
     },
     showSkuList(row) {
       //切换到skushowlist组件
