@@ -9,3 +9,22 @@ export { default as trademark } from "./product/trademark";
 export { default as attr } from "./product/attr";
 export { default as spu } from "./product/spu";
 export { default as sku } from "./product/sku";
+
+//处理同目录下的文件
+const context = require.context(".", true, /\.js$/);
+let api = context.keys();
+//过滤掉自己
+api = api.filter(item => item !== "./index.js");
+const apiName = api.reduce((p, apiPath) => {
+  //  "./order/index.js" "./acl/login.js"
+  // 提取模块名称
+  let apiName;
+  if (apiPath.lastIndexOf("index.js") > -1) {
+    apiName = apiPath.split("/")[1];
+  } else {
+    apiName = apiPath.split("/")[2].split(".")[0];
+  }
+  p[apiName] = context(apiPath).default;
+  return p;
+}, {});
+export default apiName;

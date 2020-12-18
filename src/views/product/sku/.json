@@ -1,0 +1,28 @@
+{
+  "code": 200,
+  "message": "成功",
+  "data": {
+    "records": [
+      {
+        "id": 1573,
+        "spuId": 2620,
+        "price": 1,
+        "skuName": "1",
+        "skuDesc": "1",
+        "weight": "1.00",
+        "tmId": 253,
+        "category3Id": 86,
+        "skuDefaultImg": "http://182.92.128.115:8080/group1/M00/00/C3/rBFUDF_cNcWAQBCPAAAKVSTtNOA665.jpg",
+        "isSale": 1,
+        "skuImageList": null,
+        "skuAttrValueList": null,
+        "skuSaleAttrValueList": null
+      }
+    ],
+    "total": 198,
+    "size": 5,
+    "current": 1,
+    "pages": 40
+  },
+  "ok": true
+}
