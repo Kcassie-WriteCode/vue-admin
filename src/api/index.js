@@ -1,21 +1,20 @@
-export { default as login } from "./acl/login"; // {default: {}}
-export { default as user } from "./acl/user";
-export { default as role } from "./acl/role";
-export { default as permission } from "./acl/permission";
-export { default as category } from "./category";
-export { default as clientUser } from "./clientUser";
-export { default as order } from "./order";
-export { default as trademark } from "./product/trademark";
-export { default as attr } from "./product/attr";
-export { default as spu } from "./product/spu";
-export { default as sku } from "./product/sku";
+// export { default as login } from "./acl/login"; // {default: {}}
+// export { default as user } from "./acl/user";
+// export { default as role } from "./acl/role";
+// export { default as permission } from "./acl/permission";
+// export { default as category } from "./category";
+// export { default as clientUser } from "./clientUser";
+// export { default as order } from "./order";
+// export { default as trademark } from "./product/trademark";
+// export { default as attr } from "./product/attr";
+// export { default as spu } from "./product/spu";
+// export { default as sku } from "./product/sku";
 
 //处理同目录下的文件
 const context = require.context(".", true, /\.js$/);
-let api = context.keys();
 //过滤掉自己
-api = api.filter(item => item !== "./index.js");
-const apiName = api.reduce((p, apiPath) => {
+const api = context.keys().filter(item => item !== "./index.js");
+export default api.reduce((p, apiPath) => {
   //  "./order/index.js" "./acl/login.js"
   // 提取模块名称
   let apiName;
@@ -27,4 +26,3 @@ const apiName = api.reduce((p, apiPath) => {
   p[apiName] = context(apiPath).default;
   return p;
 }, {});
-export default apiName;

@@ -1,4 +1,4 @@
-import * as API from "@/api";
+import API from "@/api";
 import { Message } from "element-ui";
 export default {
   namespaced: true,
